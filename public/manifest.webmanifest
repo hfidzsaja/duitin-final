@@ -1,0 +1,50 @@
+{
+  "name": "Duitin — Catatan Keuangan Pintar",
+  "short_name": "Duitin",
+  "description": "Catat pemasukan & pengeluaran, kelola anggaran, tabungan, hutang, dan dapatkan analisis keuangan dari Asisten AI. Berbasis web, bisa dipasang di HP.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e1b17",
+  "theme_color": "#0e1b17",
+  "lang": "id",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Catat Transaksi",
+      "short_name": "Catat",
+      "description": "Tambah transaksi baru",
+      "url": "/?action=add",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Tanya Asisten AI",
+      "short_name": "Asisten",
+      "description": "Analisis keuangan oleh AI",
+      "url": "/?tab=ai",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

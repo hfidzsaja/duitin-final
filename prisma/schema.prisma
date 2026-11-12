@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Provider tetap "sqlite"; runtime memakai driver adapter libsql
+// sehingga URL bisa file:... (lokal/VPS) ATAU libsql:// (Turso/Vercel).
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Profil pengguna per perangkat — tanpa login.
+// Setiap browser/HP menyimpan deviceId acak di localStorage,
+// sehingga data tiap orang terpisah otomatis.
+model User {
+  id           String         @id @default(cuid())
+  deviceId     String         @unique
+  name         String         @default("")
+  createdAt    DateTime       @default(now())
+  wallets      Wallet[]
+  categories   Category[]
+  transactions Transaction[]
+  budgets      Budget[]
+  goals        SavingsGoal[]
+  debts        Debt[]
+}
+
+model Wallet {
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  type           String // cash | bank | ewallet
+  icon           String        @default("wallet")
+  color          String        @default("#10b981")
+  initialBalance Float         @default(0)
+  isDefault      Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  transactions   Transaction[]
+
+  @@index([userId])
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  type         String // income | expense
+  icon         String        @default("tag")
+  color        String        @default("#10b981")
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@index([userId])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String // income | expense
+  amount      Float
+  description String
+  date        DateTime
+  walletId    String
+  wallet      Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@index([date])
+  @@index([walletId])
+  @@index([categoryId])
+  @@index([userId])
+}
+
+model Budget {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month      String // format: 2026-11
+  amount     Float
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([categoryId, month])
+  @@index([userId])
+}
+
+model SavingsGoal {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  targetAmount  Float
+  currentAmount Float     @default(0)
+  deadline      DateTime?
+  icon          String    @default("target")
+  color         String    @default("#10b981")
+  createdAt     DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Debt {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       String // debt (hutang) | receivable (piutang)
+  person     String
+  amount     Float
+  paidAmount Float     @default(0)
+  note       String    @default("")
+  dueDate    DateTime?
+  settled    Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+}
