@@ -41,6 +41,7 @@ const queryClient = new QueryClient({
 function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <span className="flex items-center gap-2.5">
+     const AUTO_ISI_DATA_DEMO = false
       <span className="h-9 w-9 rounded-xl bg-primary/15 flex items-center justify-center" aria-hidden>
         <BarChart3 className="h-5 w-5 text-primary" />
       </span>
